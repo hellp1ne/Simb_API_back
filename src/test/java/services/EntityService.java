@@ -5,16 +5,13 @@ import constants.ApiEndpoints;
 import io.restassured.response.Response;
 import models.Entity;
 import models.EntityResponse;
+import io.qameta.allure.Step;
 
 import static io.restassured.RestAssured.given;
 
 public class EntityService {
 
-    /**
-     * Создает новую сущность
-     * @param entity объект сущности для создания
-     * @return ID созданной сущности в виде строки
-     */
+    @Step("Создание новой сущности")
     public static String createEntity(Entity entity) {
         Response response = given()
                 .spec(RequestSpecificationConfig.getRequestSpec())
@@ -25,11 +22,7 @@ public class EntityService {
         return response.asString();
     }
 
-    /**
-     * Удаляет сущность по ID
-     * @param id ID сущности для удаления
-     * @return Response объект с ответом сервера
-     */
+    @Step("Удаление сущности с ID: {id}")
     public static Response deleteEntity(String id) {
         return given()
                 .spec(RequestSpecificationConfig.getRequestSpec())
@@ -38,11 +31,7 @@ public class EntityService {
                 .delete(ApiEndpoints.DELETE_ENTITY);
     }
 
-    /**
-     * Получает сущность по ID
-     * @param id ID сущности для получения
-     * @return объект Entity с данными сущности
-     */
+    @Step("Получение сущности по ID: {id}")
     public static Entity getEntity(String id) {
         return given()
                 .spec(RequestSpecificationConfig.getRequestSpec())
@@ -54,10 +43,7 @@ public class EntityService {
                 .as(Entity.class);
     }
 
-    /**
-     * Получает список всех сущностей
-     * @return объект EntityResponse со списком сущностей
-     */
+    @Step("Получение списка всех сущностей")
     public static EntityResponse getAllEntities() {
         return given()
                 .spec(RequestSpecificationConfig.getRequestSpec())
@@ -68,12 +54,7 @@ public class EntityService {
                 .as(EntityResponse.class);
     }
 
-    /**
-     * Обновляет сущность по ID
-     * @param id ID сущности для обновления
-     * @param entity объект с обновленными данными
-     * @return Response объект с ответом сервера
-     */
+    @Step("Обновление сущности с ID: {id}")
     public static Response patchEntity(String id, Entity entity) {
         return given()
                 .spec(RequestSpecificationConfig.getRequestSpec())
@@ -81,21 +62,5 @@ public class EntityService {
                 .body(entity)
                 .when()
                 .patch(ApiEndpoints.PATCH_ENTITY);
-    }
-
-    /**
-     * Получает статус код при создании сущности
-     * @param entity объект сущности
-     * @return статус код ответа
-     */
-    public static int getCreateEntityStatusCode(Entity entity) {
-        return given()
-                .spec(RequestSpecificationConfig.getRequestSpec())
-                .body(entity)
-                .when()
-                .post(ApiEndpoints.CREATE_ENTITY)
-                .then()
-                .extract()
-                .statusCode();
     }
 }
