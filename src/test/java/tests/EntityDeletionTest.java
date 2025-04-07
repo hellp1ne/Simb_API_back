@@ -3,6 +3,7 @@ package tests;
 import base.BaseTest;
 import io.qameta.allure.Description;
 import io.qameta.allure.junit4.DisplayName;
+import org.apache.http.HttpStatus;
 import org.junit.Test;
 import services.EntityService;
 import static org.junit.Assert.assertEquals;
@@ -13,8 +14,10 @@ public class EntityDeletionTest extends BaseTest {
     @DisplayName("Проверка удаления сущности")
     @Description("Тест проверяет успешное удаление сущности по ID")
     public void entityDeletion() {
-        int statusCode = EntityService.deleteEntity(createdEntityId).getStatusCode();
-        assertEquals(204, statusCode);
+        EntityService.deleteEntity(createdEntityId)
+                .then()
+                .assertThat()
+                .statusCode(HttpStatus.SC_NO_CONTENT);
         markEntityAsDeleted();
     }
 }
